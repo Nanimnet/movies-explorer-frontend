@@ -16,10 +16,10 @@ function Footer() {
                 <div className="footer__description">
                     <p className="footer__year">© 2020</p>
                     <div className="footer__links">
-                        <a className="footer__link block__link" href="https://practicum.yandex.ru/web/">
+                        <a className="footer__link block__link" target="_blank" rel="noreferrer" href="https://practicum.yandex.ru/web/">
                             Яндекс.Практикум
                         </a>
-                        <a className="footer__link block__link" href="https://github.com/yandex-praktikum">
+                        <a className="footer__link block__link" target="_blank" rel="noreferrer" href="https://github.com/yandex-praktikum">
                             Github
                         </a>
                     </div>

@@ -8,9 +8,9 @@ function SearchForm() {
             <form className="search__box" noValidate>
                 <img className="search__icon" src={Icon} alt="лупа"/>
                 <div className="search__box-search">
-                    <input id="search" name="search" className="search__input" type="text" placeholder="Фильм"/>
+                    <input id="search" name="search" className="search__input" type="text" placeholder="Фильм" required/>
                 </div>
-                <button className="search__button" type="submit"></button>
+                <button className="search__button style_hover" type="submit"></button>
             </form>
             <div className="search__box-checkbox">
                 <p className="search__checked-title">Короткометражки</p>

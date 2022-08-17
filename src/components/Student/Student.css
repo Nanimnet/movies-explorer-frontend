@@ -255,7 +255,7 @@ line-height: 22px;
   font-weight: 400;
   font-size: 18px;
   line-height: 20px;
-  margin: 0 0 50px;
+  margin: 0 0 30px;
 
   color: #a0a0a0;
 }
@@ -282,19 +282,11 @@ line-height: 22px;
 
 .student-portfolio__link {
   display: flex;
-  padding: 20px 0 19px;
-  border-bottom: 1px solid #e8e8e8;
+  
   justify-content: space-between;
 }
 
-.student-portfolio__link:nth-last-of-type(1) {
-  border: 0;
-  padding: 20px 0 0;
-}
 
-.student-portfolio__link:nth-last-of-type(3) {
-  padding: 0 0 20px;
-}
 
 .student-portfolio__link-name {
   font-weight: 400;
@@ -302,6 +294,7 @@ line-height: 22px;
   line-height: 50px;
   letter-spacing: -0.04em;
   color: #000;
+  margin: 0;
 }
 
 @media screen and (max-width: 768px) {
@@ -333,4 +326,20 @@ line-height: 22px;
 
 .block__link {
   text-decoration: none;
+}
+
+.student-portfolio__links {
+  padding: 0;
+}
+
+.student-portfolio__list {
+  list-style: none;
+  padding: 0;
+  padding: 20px 0 19px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.student-portfolio__list:nth-last-of-type(1) {
+  border: 0;
+  padding: 20px 0 0;
 }
