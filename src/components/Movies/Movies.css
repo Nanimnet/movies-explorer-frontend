@@ -1,0 +1,22 @@
+.movies {
+  background-color: #fafafa;
+  padding: 70px 0 80px;
+}
+
+@media screen and (max-width: 768px) {
+  .movies {
+    padding: 70px 30px 80px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .movies {
+    padding: 40px 10px 80px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .movies {
+    padding: 40px 10px 80px;
+  }
+}

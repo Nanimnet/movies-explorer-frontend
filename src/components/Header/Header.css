@@ -1,0 +1,39 @@
+.header {
+  background-color: #DDDEE3;
+}
+
+.header_white {
+  background-color: #FAFAFA;
+}
+
+.header__container {
+  max-width: 1140px;
+  display: flex;
+  padding: 18px 0 18px 0;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header_type_logged-in {
+  padding: 18px 0;
+  gap: 44px;
+}
+
+@media screen and (max-width: 1240px) {
+  .header__container {
+    padding: 18px 20px 18px;
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  .header__container {
+    padding: 18px 30px 18px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .header__container {
+      padding: 18px 14px 18px;
+  }
+}
