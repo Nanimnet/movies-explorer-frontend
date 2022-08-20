@@ -1,0 +1,257 @@
+.about {
+  background-color: #fff;
+}
+
+.about__container {
+  padding: 110px 0;
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 1170px) {
+  .about__container {
+    padding: 90px 30px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .about__container {
+    padding: 90px 50px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .about__container {
+    padding: 70px 18px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .about__container {
+    padding: 70px 18px;
+  }
+}
+
+.about__title {
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 27px;
+  letter-spacing: -0.04em;
+  margin: 0;
+  padding: 0 0 23px;
+  border-bottom: 1px solid #000;
+}
+
+@media screen and (max-width: 767px) {
+  .about__title {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 22px;
+    padding: 0 0 28px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .about__title {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 22px;
+    padding: 0 0 28px;
+  }
+}
+
+.about__diploma-info {
+  display: flex;
+  flex-direction: row;
+  margin-top: 70px;
+  margin-bottom: 110px;
+  gap: 40px;
+}
+
+@media screen and (max-width: 768px) {
+  .about__diploma-info {
+    margin-bottom: 93px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .about__diploma-info {
+    flex-direction: column;
+    gap: 56px;
+    margin: 60px 0;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .about__diploma-info {
+    flex-direction: column;
+    gap: 56px;
+    margin: 60px 0;
+  }
+}
+
+.about__diploma {
+  max-width: 550px;
+}
+
+.about__diploma-title {
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: -0.04em;
+  margin: 0;
+}
+
+@media screen and (max-width: 767px) {
+  .about__diploma-title {
+    font-size: 18px;
+    line-height: 22px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .about__diploma-title {
+    font-size: 18px;
+    line-height: 22px;
+  }
+}
+
+.about__paragraph {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  margin: 26px 0 0;
+}
+
+@media screen and (max-width: 768px) {
+  .about__paragraph {
+    font-size: 12px;
+    line-height: 18px;
+    margin: 22px 0 0;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .about__paragraph {
+    font-size: 11px;
+    line-height: 16px;
+    margin: 16px 0 0;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .about__paragraph {
+    font-size: 11px;
+    line-height: 16px;
+    margin: 16px 0 0;
+  }
+}
+
+.about__time {
+  display: flex;
+}
+
+.about__time-paragraph {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  margin: 0;
+}
+
+@media screen and (max-width: 767px) {
+  .about__time-paragraph {
+    font-size: 11px;
+    line-height: 13px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .about__time-paragraph {
+    font-size: 11px;
+    line-height: 13px;
+  }
+}
+
+.about__time-paragraph_white {
+  color: #ffffff;
+  padding: 9px 0;
+  background-color: #3456f3;
+  min-width: 228px;
+}
+
+@media screen and (max-width: 767px) {
+  .about__time-paragraph_white {
+    color: #ffffff;
+    padding: 11px 0;
+    background-color: #3456f3;
+    min-width: 100px;
+    max-width: 10%;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .about__time-paragraph_white {
+    color: #ffffff;
+    padding: 11px 0;
+    background-color: #3456f3;
+    min-width: 100px;
+    max-width: 10%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .about__time-paragraph_white {
+    min-width: 140px;
+  }
+}
+
+.about__time-paragraph_black {
+  color: #000000;
+  background-color: #f2f2f2;
+  padding: 9px 0;
+}
+
+@media screen and (max-width: 767px) {
+  .about__time-paragraph_black {
+    padding: 11px 0;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .about__time-paragraph_black {
+    padding: 11px 0;
+  }
+}
+
+.about__time-unactive {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.about__time-description {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+
+  color: #a0a0a0;
+  margin: 14px 0 0;
+}
+
+@media screen and (max-width: 320px) {
+  .about__time-description {
+    font-size: 11px;
+    line-height: 13px;
+    margin: 10px 0 0;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .about__time-description {
+    font-size: 11px;
+    line-height: 13px;
+    margin: 10px 0 0;
+  }
+}

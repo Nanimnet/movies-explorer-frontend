@@ -1,0 +1,8 @@
+.movies-card__delete {
+    background-image: url(../../images/delete.svg);
+    background-repeat: no-repeat;
+    border: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+  }
