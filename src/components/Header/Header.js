@@ -3,7 +3,7 @@ import Logo from "../Logo/Logo";
 import Navigation from "../Navigation/Navigation";
 import { useLocation, Route } from 'react-router-dom';
 
-function Header() {
+function Header(props) {
   const endpoints = ["/", "/profile", "/movies", "/saved-movies"];
 
   const location = useLocation();
@@ -18,7 +18,7 @@ function Header() {
         location.pathname === "/" ? "" : "navigation_logged"
       }`}>
       <Logo />
-      <Navigation />
+      <Navigation loggedIn={props.loggedIn}/>
       </div>
     </header>
   </Route>

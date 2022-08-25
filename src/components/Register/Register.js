@@ -1,11 +1,25 @@
 import './Register.css';
 import { Link } from 'react-router-dom';
 import Logo from '../../images/logo.svg'
+import Error from '../Error/Error';
+import useFormValidation from '../../hooks/useFormValidation';
+import React from 'react';
 
-function Register() {
+function Register(props) {
+    const { values, handleChange, errors, isValid } = useFormValidation();
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        props.handleRegistration({
+            name: values.name,
+            email: values.email,
+            password: values.password
+        })
+    }
+
     return (
         <section className="register__page form__page"> 
-                <form className="register form">
+                <form className="register form" onSubmit={handleSubmit} noValidate>
                     <a href="/">
                         <img className="header__logo" src={Logo} alt="logo"/>
                     </a>
@@ -20,7 +34,9 @@ function Register() {
                         name="name" 
                         placeholder="Иван" 
                         required
-                        type="text"/>
+                        type="text"
+                        value={values.name || ''}
+                        onChange={handleChange}/>
                     <span className="register__error form__error"></span>
                     <p className="register__input-title form__input-title">
                         E-mail
@@ -30,8 +46,10 @@ function Register() {
                         placeholder="email" 
                         type="email" 
                         className="register__input form__input form__input_blue" 
-                        autocomplete="on" 
-                        required/>
+                        autoComplete="on" 
+                        required
+                        value={values.email || ''}
+                        onChange={handleChange}/>
                     <span className="register__error form__error"></span>
                     <p className="register__input-title form__input-title">Пароль</p>
                     <input 
@@ -39,12 +57,19 @@ function Register() {
                         placeholder="Пароль" 
                         type="password" 
                         className="register__input form__input form__input_blue" 
-                        autocomplete="on" 
-                        required/>
+                        autoComplete="on" 
+                        required
+                        value={values.password || ''}
+                        onChange={handleChange}/>
                     <span className="register__error form__error"></span>
-                    <button type="submit" className="register__button block__button_m form__button form__button_disabled style_hover" disabled="">Войти</button>
+
+                    <Error errorStatusCode={props.errorStatusCode} isSuccessfulRequest={props.isSuccessfulRequest}/>
+
+                    <button type="submit" 
+                        className={`register__button block__button_m form__button style_hover ${!isValid ? "form__button_disabled" : ""}`}
+                        disabled={!isValid}>Зарегистрироваться</button>
                     <p className="register__text form__text">Уже зарегистрированы?
-                        <Link className="register__link-input form__link" to="signin">Регистрация</Link>
+                        <Link className="register__link-input form__link" to="signin">Вход</Link>
                     </p>
                 </form>
             </section>
