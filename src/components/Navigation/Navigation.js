@@ -3,7 +3,10 @@ import { Link, useLocation } from "react-router-dom";
 import NavTab from "../NavTab/NavTab";
 import React from "react";
 
-function Navigation({ isLogged }) {
+function Navigation({ loggedIn }) {
+  const location = useLocation();
+  const locationMovies = location.pathname === '/movies';
+  const locationSavedMovies = location.pathname === '/saved-movies';
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   function handleMenuOpen() {
@@ -14,21 +17,26 @@ function Navigation({ isLogged }) {
     setIsMenuOpen(false);
   }
 
-  const location = useLocation();
+  function makeLinkActive(isActive) {
+    return isActive 
+    ? 'navigation__link navigation__link_logged navigation__link_active' 
+    : 'navigation__link navigation__link_logged';
+}
+
   return (
     <>
         {isMenuOpen ?  <NavTab isOpen={isMenuOpen} onClose={handleMenuClose}/> : ''}
-      {!(location.pathname === "/" && !isLogged) ? (
+      {!(location.pathname === "/" && !loggedIn) ? (
         <nav className="navigation">
           <Link
-            className="navigation__link navigation__link_logged"
+            className={makeLinkActive(locationMovies)}
             onClick={handleMenuClose}
             to="/movies"
           >
             Фильмы
           </Link>
           <Link
-            className="navigation__link navigation__link_logged"
+            className={makeLinkActive(locationSavedMovies)}
             onClick={handleMenuClose}
             to="/saved-movies"
           >

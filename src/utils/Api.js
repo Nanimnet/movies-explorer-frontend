@@ -1,3 +1,5 @@
+import { BASE_URL } from './constants.js';
+
 class Api {
     constructor({baseUrl, headers}) {
         this._baseurl = baseUrl;
@@ -75,8 +77,8 @@ class Api {
     }
 }
 
-const api = new Api({
-    baseUrl: 'https://api.nanamovies.nomoredomains.sbs',
+const api = new Api({ 
+    baseUrl: BASE_URL,
     headers: {
         'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
         'Content-Type': 'application/json',

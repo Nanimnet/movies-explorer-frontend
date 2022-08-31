@@ -1,3 +1,5 @@
+import { MOVIES_URL } from './constants.js';
+
 class MovieApi {
     constructor({baseUrl, headers}) {
         this._baseUrl = baseUrl;
@@ -20,7 +22,7 @@ class MovieApi {
 }
 
 const apiMovies = new MovieApi({
-    baseUrl: 'https://api.nomoreparties.co/beatfilm-movies',
+    baseUrl: MOVIES_URL,
     headers: {
         'Content-Type': 'application/json',
     }

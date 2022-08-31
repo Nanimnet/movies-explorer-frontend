@@ -5,7 +5,7 @@ import { handleDuration } from '../../utils/utils';
 import { useLocation } from 'react-router-dom';
 
 function MoviesCard(props) {
-    const location=useLocation();
+    const location = useLocation();
     const locationMovies = location.pathname === '/movies';
 
     function handleSaveMovie() {
@@ -18,7 +18,7 @@ function MoviesCard(props) {
             year: props.movie.year,
             description: props.movie.description,
             image: `https://api.nomoreparties.co/${props.movie.image.url}`,
-            trailerLink: props.movie.trailerLink,
+            trailerLink: props.movie.trailerLink || 'Нет данных',
             nameRU: props.movie.nameRU || 'Нет данных',
             nameEN: props.movie.nameEN || 'Нет данных',
             thumbnail: `https://api.nomoreparties.co/${props.movie.image.formats.thumbnail.url}`,
@@ -33,7 +33,7 @@ function MoviesCard(props) {
         if (location.pathname !== '/movies') {
             props.onDeleteMovie(props.movie);
         } else {
-            const nameRu = String(props.movie.nameRu)
+            const nameRu = String(props.movie.nameRU)
             const movieToDeleteArray = props.savedMovies.filter(data => {
                 const movieName = String(data.nameRU);
                 const movieToDeleteName = movieName.includes(nameRu);
@@ -43,6 +43,7 @@ function MoviesCard(props) {
             props.onDeleteMovie(movieToDelete);
         }
     }
+    
     return (
             <div className="movies__card" key={props.movie._id}>
                 <div className="movies-card__info">

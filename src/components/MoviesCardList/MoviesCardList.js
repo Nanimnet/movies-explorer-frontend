@@ -5,94 +5,90 @@ import React from "react";
 import { useLocation } from 'react-router-dom';
 
 function MoviesCardList(props) {
-  const location = useLocation();
-  const locationMovies = location.pathname === '/movies';
-  const moviesSaved = props.onMoviesSearch ? props.foundMoviesInSavedMovies : props.movies;
-  
-  const windowWidth = () => { return window.innerWidth };
-  const [size, setSize] = React.useState(windowWidth());
+    const location = useLocation();
+    const locationMovies = location.pathname === '/movies';
+    const moviesSaved = props.onMovieSearch ? props.foundMoviesInSavedMovies : props.movies;
 
-  const [numderOfCards, setNumberOfCards] = React.useState(0);
-  const [showMoreCards, setShowMoreCards] = React.useState(0);
-  const [moviesToRender, setMoviesToRender] = React.useState([]);
+    const windowWidth = () => { return window.innerWidth };
+    const [size, setSize] = React.useState(windowWidth());
 
-  React.useEffect(() => {
-    handleShowCards()
-  }, [size, numderOfCards, showMoreCards]);
+    const [numberOfCards, setNumberOfCards] = React.useState(0);
+    const [showMoreCards, setShowMoreCards] = React.useState(0);
+    const [moviesToRender, setMoviesToRender] = React.useState([]);
 
-  React.useEffect(() => {
-    if (size >= 1280) {
-      setNumberOfCards(12);
-      setShowMoreCards(3);
-    } else if ( size > 480 && size < 1280) {
-      setNumberOfCards(8);
-      setShowMoreCards(2);
-    } else if ( size >318 && size <= 480) {
-      setNumberOfCards(5);
-      setShowMoreCards(2);
+    React.useEffect(() => {
+        handleShowCards()
+    }, [size, numberOfCards, showMoreCards]);
+
+    React.useEffect(() => {
+        if (size >= 1150) {
+            setNumberOfCards(12);
+            setShowMoreCards(3);
+        } else if (size > 480 && size < 1150) {
+            setNumberOfCards(8);
+            setShowMoreCards(2);
+        } else if (size > 318 && size <= 480) {
+            setNumberOfCards(5);
+            setShowMoreCards(2);
+        }
+    }, [size, props.movies]);
+
+    React.useEffect(() => {
+        let timeOut;
+
+        function handleResize() {
+            clearTimeout(timeOut);
+            timeOut = setTimeout(() => { setSize(windowWidth()) }, 1000);
+        }
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [size]);
+
+    function handleShowCards() {
+        const numberOfFilmsToBeShown = props.movies.slice(0, numberOfCards);
+        setMoviesToRender(numberOfFilmsToBeShown);
     }
-  }, [size, props.movies]);
 
-  React.useEffect(() => {
-    let timeOut; 
+    function handleButtonClickShowMore() {
+        const remained = props.movies.length - moviesToRender.length;
 
-    function handleResize() {
-      clearTimeout(timeOut);
-      timeOut = setTimeout(() => {
-        setSize(windowWidth())
-      }, 1000);
+        if (remained > 0) {
+            const movie = props.movies.slice(moviesToRender.length, moviesToRender.length + showMoreCards);
+            setMoviesToRender([...moviesToRender, ...movie]);
+        }
     }
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [size]);
+    function getFoundMoviesList() {
+        return moviesToRender.map((movie) => {
+            const like = props.savedMovies.find(i => {return i.movieId === movie.id})
 
-  function handleShowCards() {
-    const numberOfFilmsToBeShow = props.movies.slice(0, numderOfCards);
-    setMoviesToRender(numberOfFilmsToBeShow);
-  }
-
-  function handleButtonClickShowMore() {
-    const quantity = props.movies.length - moviesToRender.length;
-    if (quantity > 0) {
-      const movie = props.movies.slice(moviesToRender.length, moviesToRender.length + showMoreCards);
-      setMoviesToRender([...moviesToRender, ...movie]);
+            return (
+                <MoviesCard
+                    key={movie.id}
+                    movie={movie}
+                    savedMovies={props.savedMovies}
+                    onSaveMovie={props.onSaveMovie}
+                    onDeleteMovie={props.onDeleteMovie}
+                    isLikeMovies={like}
+                />
+            )
+        })
     }
-  }
 
-  function getFoundMoviesList() {
-    return moviesToRender.map((movie) => {
-      const like = props.savedMovies.find(i => {
-        return i.movieId === movie.id
-      })
-
-      return (
-        <MoviesCard 
-          key={movie.id}
-          movie={movie}
-          savedMovies={props.savedMovies}
-          onSaveMovie={props.onSaveMovie}
-          onDeleteMovie={props.onSaveMovie}
-          isLikeMovies={like}
-          />
-      )
-    })
-  }
-
-  function getSavedMoviesList() {
-    return (
-      moviesSaved.map((movie, index) => (
-        <MoviesCard 
-          key={`index_${movie.id}_${index}`}
-          movie={movie}
-          savedMovies={props.savedMovies}
-          onDeleteMovie={props.onDeleteMovie}
-          isLikeMovies={true}
-          />
-      ))
-    )
-  }
-
+    function getSavedMovies() {
+        return (
+            moviesSaved.map((movie) => (
+                <MoviesCard
+                    key={movie._id}
+                    movie={movie}
+                    savedMovies={props.savedMovies}
+                    onDeleteMovie={props.onDeleteMovie}
+                    isLikeMovies={true}
+                />
+            ))
+        )
+    }
 
   return (
     <section className="movies">
@@ -105,7 +101,7 @@ function MoviesCardList(props) {
         ) : ( 
           <div className="movies__container block">
             <div className="movies__cards">
-            {locationMovies ? getFoundMoviesList() : getSavedMoviesList()}
+            {locationMovies ? getFoundMoviesList() : getSavedMovies()}
               </div>
 
               {locationMovies ? (

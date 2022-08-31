@@ -18,7 +18,6 @@ import * as auth from '../../utils/auth';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 
 function App() {
-
     const history = useHistory();
     const location = useLocation();
     const locationMovies = location.pathname === '/movies';
@@ -27,30 +26,36 @@ function App() {
     const [allMovies, setAllMovies] = React.useState([]);
     const [foundMovies, setFoundMovies] = React.useState([]);
     const [savedMovies, setSavedMovies] = React.useState([]);
-    const [foundMoviesInSavedMovies, setFoundMoviesInSavedMovies] = React.useState([]);;
-    
+    const [foundMoviesInSavedMovies, setFoundMoviesInSavedMovies] = React.useState([]);
+
     const [isMovieSearch, setIsMovieSearch] = React.useState(false);
     const [isDelete, setIsDelete] = React.useState(false);
-    const [queryKeyWord, setQueryKeyWord] = React.useState('');
-    const [loggedIn, setLoggedIn] = React.useState(false);
+
+    const [loggedIn, setLoggedIn] = React.useState(false); // вошедший в систему
     const [currentUser, setCurrentUser] = React.useState({name: '', email: ''});
 
     const [isUserChecked, setIsUserChecked] = React.useState(false);
+
+    const [isError, setIsError] = React.useState(false);
+    const [isNothingFound, setIsNothingFound] = React.useState(false);
+
     const [isErrorSavedMovies, setIsErrorSavedMovies] = React.useState(false);
     const [isNothingFoundSavedMovies, setIsNothingFoundSavedMovies] = React.useState(false);
 
-
-    const [isNothingFound, setIsNothingFound] = React.useState(false);
-    const [isError, setIsError] = React.useState(false);
     const [errorStatusCodeRegistration, setErrorStatusCodeRegistration] = React.useState('');
     const [isSuccessfulRegistration, setIsSuccessfulRegistration] = React.useState(false);
+
     const [errorStatusCodeLogin, setErrorStatusCodeLogin] = React.useState('');
     const [isSuccessfulLogin, setIsSuccessfulLogin] = React.useState(false);
+
     const [errorStatusCodeProfile, setErrorStatusCodeProfile] = React.useState('');
     const [isSuccessfulUpdateProfile, setIsSuccessfulUpdateProfile] = React.useState(false);
-    
+
     const checboxState = localStorage.getItem('stateCheckbox') === 'true' ? true : false;
+
+    const [queryKeyWord, setQueryKeyWord] = React.useState('');
     const [statusChecbox, setStatusChecbox] = React.useState(checboxState);
+
 
     React.useEffect(() => {
         if (localStorage.getItem('jwt')) {
@@ -63,46 +68,49 @@ function App() {
                 .catch((err) => {
                     setIsUserChecked(true);
                     console.log(err);
+                    history.push('/signin');
                 })
         } else {
             setIsUserChecked(true);
         }
-    }, [])
+    }, []);
 
     function handleGetSavedMovies() {
         setIsLoading(true);
         api.getSavedMovies()
             .then((res) => {
                 setSavedMovies(res);
-                localStorage.setItem('savedMovies', JSON.stringify(res));
+                localStorage.setItem("savedMovies", JSON.stringify(res));
                 setIsLoading(false);
             })
             .catch((error) => {
                 setIsLoading(false);
-                setIsErrorSavedMovies(true)
+                setIsErrorSavedMovies(true);
                 console.log(error);
             });
     }
 
+    // Пытаемся получить данные пользователя и его сохраненных фильмов, и не заблудиться в асинхронности
     React.useEffect(() => {
-        const token = localStorage.getItem('jwt');
+        const token = localStorage.getItem("jwt");
         if (!token) {
-            return
+            return;
         } else {
             Promise.all([api.getProfileInfo(token), handleGetSavedMovies()])
-            .then(([ userData ]) => {
-                setCurrentUser({
-                    ...currentUser,
-                    name: userData.name,
-                    email: userData.email,
+                .then(([userData, favoriteMovieData]) => {
+                    setCurrentUser({
+                        ...currentUser,
+                        name: userData.name,
+                        email: userData.email,
+                    });
+                })
+                .catch((err) => {
+                    console.log(err);
                 });
-            })
-            .catch((err) => {
-                console.log(err);
-            })
         }
-    }, [loggedIn])
+    }, [loggedIn]);
 
+    // забираем фильмы
     React.useEffect(() => {
         if (JSON.parse(localStorage.getItem('movies')) && locationMovies) {
             const films = JSON.parse(localStorage.getItem('movies'));
@@ -115,32 +123,35 @@ function App() {
         }
     }, [locationMovies]);
 
+    // обьект для регистрации
     function handleRegistration(data) {
-        const authData = {
+        const dataLogin = {
             email: data.email,
             password: data.password
         }
 
+        //забираем запрос на регистрацию и если нет ошибок переходим на страницу с фильмами.
         auth.register(data)
             .then(() => {
                 setIsSuccessfulRegistration(true);
-                handleLogin(authData);
-                history.push('/movies');
+                handleLogin(dataLogin);
+                history.push("/movies");
             })
             .catch(err => {
-                console.log(err.message);
+                console.log(err.massage);
                 setErrorStatusCodeRegistration(err);
                 setIsSuccessfulRegistration(false);
             })
     }
 
+    //обратить внимание что ответил сервер при логировании
     function handleLogin(data) {
         auth.authorize(data)
             .then((res) => {
                 localStorage.setItem('jwt', res.jwt);
                 setLoggedIn(true);
                 setIsSuccessfulLogin(true);
-                history.push('/movies');
+                history.push("/movies");
             })
             .catch(err => {
                 console.log(err);
@@ -161,8 +172,11 @@ function App() {
                 setIsSuccessfulUpdateProfile(false);
             })
     }
-
+    //Поиск по массиву фильмов
     function handleSearchMovies(query, stateCheckbox) {
+        if (isLoading) {
+            return
+        }
         setIsLoading(true);
 
         setQueryKeyWord(query);
@@ -171,7 +185,7 @@ function App() {
         localStorage.setItem('query', query);
         localStorage.setItem('stateCheckbox', stateCheckbox);
 
-        if (allMovies.length === 0) {
+        if (true || allMovies.length === 0) {
             apiMovies.getFoundMovies(query)
                 .then((movies) => {
                     setAllMovies(movies);
@@ -224,6 +238,18 @@ function App() {
         }
     }
 
+    function handleAddMovieToSaved(newMovie) {
+        api.addMovieToSaved(newMovie)
+            .then((newMovie) => {
+                setSavedMovies([newMovie, ...savedMovies]);
+                setIsError(false);
+            })
+            .catch(err => {
+                setIsError(true);
+                console.log(err);
+            })
+    }
+
     function handleDeleteSavedMovie(movie) {
         setIsDelete(true)
         api.deleteMovieLike(movie)
@@ -239,27 +265,14 @@ function App() {
             })
     }
 
-    function handleAddMovieToSaved(newMovie) {
-        api.addMovieToSaved(newMovie)
-            .then((newMovie) => {
-                setSavedMovies([newMovie, ...savedMovies]);
-                setIsError(false);
-            })
-            .catch(err => {
-                setIsError(true);
-                console.log(err);
-            })
-    }
-
     function logout() {
+        setIsSuccessfulUpdateProfile(false);
         setLoggedIn(false);
-        localStorage.removeItem('jwt');
-        localStorage.removeItem('movies');
-        localStorage.removeItem('stateCheckbox');
-        localStorage.removeItem('query');
+        localStorage.clear();
         setFoundMovies([]);
         setSavedMovies([])
-        setCurrentUser({name: '', email: ''});
+        setCurrentUser({});
+        history.push('/');
     }
 
     return (
@@ -331,11 +344,11 @@ function App() {
                             </ProtectedRoute>
                             : null}
 
-                        {isUserChecked ?
+                        
                             <Route path="*">
-                                {loggedIn ? <PageNotFound/> : <Redirect exact to="/"/>}
+                                <PageNotFound/>
                             </Route>
-                            : null}
+                            
                     </Switch>
 
                     <Footer/>

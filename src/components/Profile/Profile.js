@@ -33,12 +33,16 @@ function Profile(props) {
       currentUser.email === values.email
     ) {
       setIsValid(false);
+    } else {
+      setIsValid(true);
     }
   }, [isValid, currentUser, values, props.isSuccessfulRequest]);
 
   React.useEffect(() => {
     if (props.errorStatusCode) {
       setIsValid(false);
+    } else {
+      setIsValid(true);
     }
   }, [isValid, currentUser, values, props.isSuccessfulRequest]);
 
@@ -50,7 +54,6 @@ function Profile(props) {
     e.preventDefault();
 
     props.onUpdateUserInfo(values.name, values.email);
-
     if (!props.isSuccessfulRequest) {
       setIsInputActive(false);
     } else {
@@ -107,7 +110,7 @@ function Profile(props) {
             />
           </div>
           <span id="email-input-error" className="profile__error">
-            {errors.name || ""}
+            {errors.email || ""}
           </span>
 
           {!isInputActive ? (

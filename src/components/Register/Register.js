@@ -50,7 +50,7 @@ function Register(props) {
                         required
                         value={values.email || ''}
                         onChange={handleChange}/>
-                    <span className="register__error form__error"></span>
+                    <span className="register__error form__error">{errors.email || ''}</span>
                     <p className="register__input-title form__input-title">Пароль</p>
                     <input 
                         name="password" 

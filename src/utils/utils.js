@@ -1,3 +1,5 @@
+import { SHORTMOVIES_DURATION } from './constants.js';
+
 export function handleFoundMovies(query, movies) {
   const keyword = query.toLowerCase();
   const moviesFilter = movies.filter((item) => {
@@ -9,7 +11,7 @@ export function handleFoundMovies(query, movies) {
 }
 
 export function filterShortFilm(movies) {
-  return movies.filter((film) => film.duration < 40);
+  return movies.filter((film) => film.duration < SHORTMOVIES_DURATION);
 }
 
 export function handleDuration(duration) {

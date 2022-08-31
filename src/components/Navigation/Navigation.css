@@ -34,6 +34,10 @@
   align-items: center;
 }
 
+.navigation__link_active {
+  text-decoration: underline;
+}
+
 .navigation__link:hover {
   text-decoration: underline;
 }
