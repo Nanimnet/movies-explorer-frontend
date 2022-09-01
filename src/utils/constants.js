@@ -3,21 +3,21 @@ const MOVIES_URL = 'https://api.nomoreparties.co/beatfilm-movies';
 const SHORTMOVIES_DURATION = 40;
 const DEVICE_PARAMS = {
   desktop: {
-    width: 917,
+    width: 1150,
     cards: {
       total: 12,
       more: 3,
     },
   },
   tablet: {
-    width: 583,
+    width: 480,
     cards: {
       total: 8,
       more: 2,
     },
   },
   mobile: {
-    width: 583,
+    width: 318,
     cards: {
       total: 5,
       more: 2,

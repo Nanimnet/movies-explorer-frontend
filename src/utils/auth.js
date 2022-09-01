@@ -1,5 +1,4 @@
-// const BASE_URL = 'https://api.nanamovies.nomoredomains.sbs'
-const BASE_URL = 'http://localhost:3000'
+import { BASE_URL } from './constants.js';
 
 export function register({ password, email, name }) {
     return fetch(`${BASE_URL}/signup`, {

@@ -109,6 +109,20 @@
   background-color: #fafafa;
 }
 
+.search__button[disabled] {
+  filter: grayscale(1);
+  opacity: 0.5!important;/*перекрывает hover*/
+  background-image: url(../../images/find.svg);
+  background-repeat: no-repeat;
+  border: 0;
+  height: 34px;
+  padding: 0;
+  width: 34px;
+  background-size: 100%;
+  background-position: center;
+  background-color: #fafafa;
+}
+
 .search__checkbox-slider {
   background-color: #2be080;
   border-radius: 20px;

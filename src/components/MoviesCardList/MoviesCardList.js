@@ -3,6 +3,7 @@ import MoviesCard from "../MoviesCard/MoviesCard";
 import ShowMoreButton from '../ShowMoreButton/ShowMoreButton';
 import React from "react";
 import { useLocation } from 'react-router-dom';
+import { DEVICE_PARAMS } from '../../utils/constants';
 
 function MoviesCardList(props) {
     const location = useLocation();
@@ -20,16 +21,29 @@ function MoviesCardList(props) {
         handleShowCards()
     }, [size, numberOfCards, showMoreCards]);
 
+    // React.useEffect(() => {
+    //     if (size >= 1150) {
+    //         setNumberOfCards(12);
+    //         setShowMoreCards(3);
+    //     } else if (size > 480 && size < 1150) {
+    //         setNumberOfCards(8);
+    //         setShowMoreCards(2);
+    //     } else if (size > 318 && size <= 480) {
+    //         setNumberOfCards(5);
+    //         setShowMoreCards(2);
+    //     }
+    // }, [size, props.movies]);
+
     React.useEffect(() => {
-        if (size >= 1150) {
-            setNumberOfCards(12);
-            setShowMoreCards(3);
-        } else if (size > 480 && size < 1150) {
-            setNumberOfCards(8);
-            setShowMoreCards(2);
-        } else if (size > 318 && size <= 480) {
-            setNumberOfCards(5);
-            setShowMoreCards(2);
+        if (size >= DEVICE_PARAMS.desktop.width) {
+            setNumberOfCards(DEVICE_PARAMS.desktop.cards.total);
+            setShowMoreCards(DEVICE_PARAMS.desktop.cards.more);
+        } else if (size > DEVICE_PARAMS.tablet.width && size < DEVICE_PARAMS.desktop.width) {
+            setNumberOfCards(DEVICE_PARAMS.tablet.cards.total);
+            setShowMoreCards(DEVICE_PARAMS.tablet.cards.more);
+        } else if (size > DEVICE_PARAMS.mobile.width && size <= DEVICE_PARAMS.tablet.width) {
+            setNumberOfCards(DEVICE_PARAMS.mobile.cards.total);
+            setShowMoreCards(DEVICE_PARAMS.mobile.cards.more);
         }
     }, [size, props.movies]);
 

@@ -9,7 +9,7 @@ import Preloader from '../Preloader/Preloader'
 function SavedMovies(props) {
   return (
     <main>
-      <SearchForm onFindMovies={props.onFindMovies}/>
+      <SearchForm onFindMovies={props.onFindMovies} isLoading={props.isLoading}/>
       {props.isLoading ? <Preloader/> :( 
         <MoviesCardList
           allMovies={props.allMovies}

@@ -67,7 +67,7 @@ function SearchForm(props) {
                 <button 
                     className="search__button style_hover" 
                     type="submit"
-                    disabled={isEmptyRequest && !isValid}>
+                    disabled={(isEmptyRequest && !isValid) || props.isLoading}>
                 </button>
             </form>
             <div className="search__box-checkbox">

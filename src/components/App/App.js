@@ -31,7 +31,7 @@ function App() {
     const [isMovieSearch, setIsMovieSearch] = React.useState(false);
     const [isDelete, setIsDelete] = React.useState(false);
 
-    const [loggedIn, setLoggedIn] = React.useState(false); // вошедший в систему
+    const [loggedIn, setLoggedIn] = React.useState(false);
     const [currentUser, setCurrentUser] = React.useState({name: '', email: ''});
 
     const [isUserChecked, setIsUserChecked] = React.useState(false);
@@ -90,7 +90,6 @@ function App() {
             });
     }
 
-    // Пытаемся получить данные пользователя и его сохраненных фильмов, и не заблудиться в асинхронности
     React.useEffect(() => {
         const token = localStorage.getItem("jwt");
         if (!token) {
@@ -110,7 +109,6 @@ function App() {
         }
     }, [loggedIn]);
 
-    // забираем фильмы
     React.useEffect(() => {
         if (JSON.parse(localStorage.getItem('movies')) && locationMovies) {
             const films = JSON.parse(localStorage.getItem('movies'));
@@ -123,14 +121,12 @@ function App() {
         }
     }, [locationMovies]);
 
-    // обьект для регистрации
     function handleRegistration(data) {
         const dataLogin = {
             email: data.email,
             password: data.password
         }
 
-        //забираем запрос на регистрацию и если нет ошибок переходим на страницу с фильмами.
         auth.register(data)
             .then(() => {
                 setIsSuccessfulRegistration(true);
@@ -144,7 +140,6 @@ function App() {
             })
     }
 
-    //обратить внимание что ответил сервер при логировании
     function handleLogin(data) {
         auth.authorize(data)
             .then((res) => {
@@ -172,52 +167,48 @@ function App() {
                 setIsSuccessfulUpdateProfile(false);
             })
     }
-    //Поиск по массиву фильмов
-    function handleSearchMovies(query, stateCheckbox) {
-        if (isLoading) {
-            return
-        }
-        setIsLoading(true);
 
-        setQueryKeyWord(query);
-        setStatusChecbox(stateCheckbox);
-
-        localStorage.setItem('query', query);
-        localStorage.setItem('stateCheckbox', stateCheckbox);
-
-        if (true || allMovies.length === 0) {
-            apiMovies.getFoundMovies(query)
-                .then((movies) => {
-                    setAllMovies(movies);
-                    const filteredMovies = handleFoundMovies(query, movies);
-                    const film = (stateCheckbox === true) ? filterShortFilm(filteredMovies) : filteredMovies;
-                    setFoundMovies(film);
-                    checkFoundMoviesLength(film, setIsNothingFound);
-                    setIsError(false);
-                    localStorage.setItem('movies', JSON.stringify(film));
-                    setIsLoading(false);
-                })
-                .catch(err => {
-                    setIsError(true);
-                    console.log(err);
-                })
-                .finally(() => {
-                    setIsLoading(false);
-                })
-        }
+function handleSearchMovies(query, stateCheckbox) {
+    if (isLoading) {
+        return
     }
+    setIsLoading(true);
 
-    React.useEffect(() => {
-        if (allMovies.length !== 0) {
-            const filteredMovies = handleFoundMovies(queryKeyWord, allMovies);
-            const film = (statusChecbox === true) ? filterShortFilm(filteredMovies) : filteredMovies;
-            setFoundMovies(film);
-            checkFoundMoviesLength(film, setIsNothingFound);
-            setIsError(false);
-            setIsLoading(false);
-            localStorage.setItem('movies', JSON.stringify(film));
-        }
-    }, [queryKeyWord, allMovies, statusChecbox])
+    setQueryKeyWord(query);
+    setStatusChecbox(stateCheckbox);
+
+    localStorage.setItem('query', query);
+    localStorage.setItem('stateCheckbox', stateCheckbox);
+}
+
+React.useEffect(() => {
+    if (allMovies.length === 0) {
+        apiMovies.getFoundMovies()
+            .then((movies) => {
+                setAllMovies(movies);
+                setIsLoading(false);
+            })
+            .catch(err => {
+                setIsError(true);
+                console.log(err);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            })
+    }
+}, []);
+
+React.useEffect(() => {
+    if (allMovies.length !== 0) {
+        const filteredMovies = handleFoundMovies(queryKeyWord, allMovies);
+        const film = (statusChecbox === true) ? filterShortFilm(filteredMovies) : filteredMovies;
+        setFoundMovies(film);
+        checkFoundMoviesLength(film, setIsNothingFound);
+        setIsError(false);
+        setIsLoading(false);
+        localStorage.setItem('movies', JSON.stringify(film));
+    }
+}, [queryKeyWord, allMovies, statusChecbox, isLoading]);
 
     function handleSearchSavedMovies(query, stateCheckbox) {
         setIsLoading(true)
@@ -345,7 +336,7 @@ function App() {
                             : null}
 
                         
-                            <Route path="*">
+                            <Route path="*" exact={true}>
                                 <PageNotFound/>
                             </Route>
                             
