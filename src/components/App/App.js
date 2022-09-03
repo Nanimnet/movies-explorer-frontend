@@ -182,9 +182,18 @@ function handleSearchMovies(query, stateCheckbox) {
 }
 
 React.useEffect(() => {
-    if (allMovies.length === 0) {
+
+    let films = [];
+
+    if (localStorage.getItem('allmovies'))
+    {
+        films = JSON.parse(localStorage.getItem('allmovies'));
+    }
+
+    if (films.length === 0) {
         apiMovies.getFoundMovies()
             .then((movies) => {
+                localStorage.setItem('allmovies', JSON.stringify(movies));
                 setAllMovies(movies);
                 setIsLoading(false);
             })
@@ -195,7 +204,11 @@ React.useEffect(() => {
             .finally(() => {
                 setIsLoading(false);
             })
+    } else {
+        setAllMovies(films);
+        setIsLoading(false);
     }
+
 }, []);
 
 React.useEffect(() => {
