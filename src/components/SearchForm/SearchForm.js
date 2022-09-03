@@ -14,10 +14,7 @@ function SearchForm(props) {
 
     React.useEffect(() => {
         if (localStorage.getItem('query') && localStorage.getItem('stateCheckbox') && locationMovies) {
-            // const inputSearch = localStorage.getItem('query')
             const checkbox = JSON.parse(localStorage.getItem('stateCheckbox'));
-            // setValues({search: inputSearch});
-            // setIsValid(true);
             setCheckBox(checkbox);
         }
     }, [])
