@@ -228,6 +228,7 @@
     color: #EE3465;
     margin-left: 40px;
     display: none;
+    text-align: center;
 }
 
 .search__error_active {

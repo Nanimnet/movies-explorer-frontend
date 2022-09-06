@@ -5,31 +5,48 @@ import { useLocation } from 'react-router-dom'
 import React from 'react';
 
 function SearchForm(props) {
-    const {values, setValues, handleChange, isValid, setIsValid} = useFormValidation();
+    const { values, setValues, handleChange, isValid, setIsValid } = useFormValidation();
     const location = useLocation();
     const locationMovies = location.pathname === '/movies';
-    const stateCheckBoxMovies = location ? localStorage.getItem('stateCheckbox') === 'true' : false;
-    const [checkbox,setCheckBox] = React.useState(stateCheckBoxMovies);
+    const stateCheckBoxMovies = locationMovies ? localStorage.getItem('stateCheckbox') === 'true' : false;
+    const [checkbox, setCheckBox] = React.useState(stateCheckBoxMovies);
     const [isEmptyRequest, setIsEmptyRequest] = React.useState(false);
 
     React.useEffect(() => {
-        if (localStorage.getItem('query') && localStorage.getItem('stateCheckbox') && locationMovies) {
+        if (localStorage.getItem('query')
+            && localStorage.getItem('stateCheckbox')
+            && (locationMovies
+                //|| location.pathname === '/saved-movies' // нужно ли автозаполнение формы на странице сохраненных фильмов? Потому что query - глобальная переменная и действует на глобальный фильтр
+            )
+        ) {
+            const inputSearch = localStorage.getItem('query')
             const checkbox = JSON.parse(localStorage.getItem('stateCheckbox'));
+            setValues({ search: inputSearch });
+            setIsValid(true);
             setCheckBox(checkbox);
         }
     }, [])
 
-    function handleCheckBox() {
+    function handleCheckBox(e) {
+
         setCheckBox(!checkbox);
+        //handleChange(e);
+        //handleSubmit(e);
         handleSubmitCheckBox();
     }
 
     function handleSubmitCheckBox() {
+
         props.onFindMovies(values.search, !checkbox);
     }
 
     function handleSubmit(e) {
+
         e.preventDefault();
+
+        if (props.isLoading) {
+            return;
+        }
 
         if (!isValid) {
             setIsEmptyRequest(true);
@@ -42,49 +59,50 @@ function SearchForm(props) {
 
     return (
         <section className="search">
-            <span id="search-error" className={`search__error ${(isEmptyRequest && !isValid) ? 'search__error_active' : ''}`}>
-                Введите слово для поиска </span>
+            
 
-        <div className="search__container block">
-            <form className="search__box"
-                    onSubmit={(e) => handleSubmit(e)} 
+            <div className="search__container block">
+                <form className="search__box"
+                    onSubmit={(e) => handleSubmit(e)}
                     noValidate>
-                <img className="search__icon" src={Icon} alt="лупа"/>
-                <div className="search__box-search">
-                    <input 
-                        id="search" 
-                        name="search" 
-                        className="search__input" 
-                        type="text" 
-                        placeholder="Фильм" 
-                        value={values.search || ''}
-                        onChange={handleChange}
-                        disabled={props.isLoading}
-                        required/>
-                </div>
-                <button 
-                    className="search__button style_hover" 
-                    type="submit"
-                    disabled={(isEmptyRequest && !isValid) || props.isLoading}>
-                </button>
-            </form>
-            <div className="search__box-checkbox">
-                <p className="search__checked-title">Короткометражки</p>
-                <label className="search__checkbox">
-                    <input 
-                        name="checkbox"     
-                        className="search__checkbox-input" 
-                        type="checkbox" 
-                        disabled={!isValid}
-                        value={values.checkbox}
-                        onChange={handleCheckBox}
-                        checked={checkbox}
+                    <img className="search__icon" src={Icon} alt="лупа" />
+                    <div className="search__box-search">
+                        <input
+                            id="search"
+                            name="search"
+                            className="search__input"
+                            type="text"
+                            placeholder="Фильм"
+                            value={values.search || ''}
+                            onChange={handleChange}
+                            disabled={props.isLoading}
+                            required />
+                    </div>
+                    <button
+                        className="search__button style_hover"
+                        type="submit"
+                        disabled={(isEmptyRequest && !isValid) || props.isLoading}>
+                    </button>
+                </form>
+                <span id="search-error" className={`search__error ${(isEmptyRequest && !isValid) ? 'search__error_active' : ''}`}>
+                Введите слово для поиска </span>
+                <div className="search__box-checkbox">
+                    <p className="search__checked-title">Короткометражки</p>
+                    <label className="search__checkbox">
+                        <input
+                            name="checkbox"
+                            className="search__checkbox-input"
+                            type="checkbox"
+                            disabled={(/*!isValid ||*/ props.isLoading)}
+                            value={values.checkbox}
+                            onChange={handleCheckBox}
+                            checked={checkbox}
                         />
-                    <span className={`${checkbox ? 'search__checkbox-slider' : 'search__checkbox-slider_checked'}`}></span>
-                </label>
+                        <span className={`${checkbox ? 'search__checkbox-slider' : 'search__checkbox-slider_checked'}`}></span>
+                    </label>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
     )
 }
 

@@ -10,6 +10,11 @@ function Register(props) {
 
     function handleSubmit(e) {
         e.preventDefault();
+
+        if (props.isLoading) {
+            return;
+        }
+
         props.handleRegistration({
             name: values.name,
             email: values.email,
@@ -36,6 +41,7 @@ function Register(props) {
                         required
                         type="text"
                         value={values.name || ''}
+                        disabled={props.isLoading}
                         onChange={handleChange}/>
                     <span className="register__error form__error"></span>
                     <p className="register__input-title form__input-title">
@@ -49,6 +55,7 @@ function Register(props) {
                         autoComplete="on" 
                         required
                         value={values.email || ''}
+                        disabled={props.isLoading}
                         onChange={handleChange}/>
                     <span className="register__error form__error">{errors.email || ''}</span>
                     <p className="register__input-title form__input-title">Пароль</p>
@@ -60,14 +67,15 @@ function Register(props) {
                         autoComplete="on" 
                         required
                         value={values.password || ''}
+                        disabled={props.isLoading}
                         onChange={handleChange}/>
                     <span className="register__error form__error"></span>
 
                     <Error errorStatusCode={props.errorStatusCode} isSuccessfulRequest={props.isSuccessfulRequest}/>
 
                     <button type="submit" 
-                        className={`register__button block__button_m form__button style_hover ${!isValid ? "form__button_disabled" : ""}`}
-                        disabled={!isValid}>Зарегистрироваться</button>
+                        className={`register__button block__button_m form__button style_hover ${!isValid || props.isLoading ? "form__button_disabled" : ""}`}
+                        disabled={!isValid || props.isLoading}>Зарегистрироваться</button>
                     <p className="register__text form__text">Уже зарегистрированы?
                         <Link className="register__link-input form__link" to="signin">Вход</Link>
                     </p>

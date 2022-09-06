@@ -7,6 +7,7 @@ export default function useFormWithValidation() {
   const [isValid, setIsValid] = useState(false);
 
   const handleChange = (e) => {
+    
     const input = e.target;
     const { value, name } = input;
 
@@ -28,6 +29,7 @@ export default function useFormWithValidation() {
     setErrors({ ...errors, [name]: input.validationMessage }); // ошибок
     setIsValid(input.closest('form').checkValidity()); // проверка валидности
   };
+
   const resetForm = useCallback(
     (newValues = {}, newErrors = {}, newIsValid = false) => { // это метод для сброса формы, полей, ошибок
       setValues(newValues);
@@ -39,46 +41,3 @@ export default function useFormWithValidation() {
 
   return { setValues, values, errors, isValid, handleChange, resetForm, setIsValid };
 }
-
-
-
-// import React from 'react';
-// import { useCallback } from "react";
-
-// function useFormValidation() {
-//     const [values, setValues] = React.useState({});
-//     const [errors, setErrors] = React.useState({});
-//     const [isValid, setIsValid] = React.useState(false);
-
-//     const handleChange = (event) => {
-//         const target = event.target;
-//         const name = target.name;
-//         const value = target.value;
-//         setValues({...values, [name]: value});
-//         setErrors({...errors, [name]: target.validationMessage });
-//         setIsValid(target.closest("form").checkValidity());
-//     };
-
-//     const resetForm = useCallback(
-//         (newValues = {}, newErrors = {}, newIsValid = false) => {
-//             setValues(newValues);
-//             setErrors(newErrors);
-//             setIsValid(newIsValid);
-//         },
-//         [setValues, setErrors, setIsValid]
-//     );
-
-//     return {
-//         values,
-//         handleChange,
-//         errors,
-//         isValid,
-//         resetForm,
-//         setValues,
-//         setErrors,
-//         setIsValid
-//     };
-// }
-
-// export default useFormValidation;
-

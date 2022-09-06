@@ -1,12 +1,20 @@
 import { SHORTMOVIES_DURATION } from './constants.js';
 
 export function handleFoundMovies(query, movies) {
-  const keyword = query.toLowerCase();
+  
+  const keyword = query?.toLowerCase();
+
+  //в случае пустой строки запроса, отображаем пустой массив
+  if (keyword === '' || keyword === 'undefined') {
+    return [];
+  }
+
   const moviesFilter = movies.filter((item) => {
     const stringRU = String(item.nameRU.toLowerCase());
     const search = stringRU.includes(keyword);
     return search;
   });
+
   return moviesFilter;
 }
 

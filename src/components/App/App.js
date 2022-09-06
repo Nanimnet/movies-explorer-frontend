@@ -16,6 +16,7 @@ import api from '../../utils/Api';
 import { handleFoundMovies, filterShortFilm } from '../../utils/utils';
 import * as auth from '../../utils/auth';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
+import Preloader from '../Preloader/Preloader'
 
 function App() {
     const history = useHistory();
@@ -32,7 +33,7 @@ function App() {
     const [isDelete, setIsDelete] = React.useState(false);
 
     const [loggedIn, setLoggedIn] = React.useState(false);
-    const [currentUser, setCurrentUser] = React.useState({name: '', email: ''});
+    const [currentUser, setCurrentUser] = React.useState({ name: '', email: '' });
 
     const [isUserChecked, setIsUserChecked] = React.useState(false);
 
@@ -55,7 +56,6 @@ function App() {
 
     const [queryKeyWord, setQueryKeyWord] = React.useState('');
     const [statusChecbox, setStatusChecbox] = React.useState(checboxState);
-
 
     React.useEffect(() => {
         if (localStorage.getItem('jwt')) {
@@ -122,6 +122,13 @@ function App() {
     }, [locationMovies]);
 
     function handleRegistration(data) {
+
+        if (isLoading) {
+            return;
+        }
+
+        setIsLoading(true);
+
         const dataLogin = {
             email: data.email,
             password: data.password
@@ -138,9 +145,19 @@ function App() {
                 setErrorStatusCodeRegistration(err);
                 setIsSuccessfulRegistration(false);
             })
+            .finally(() => {
+                setIsLoading(false);
+            });
     }
 
     function handleLogin(data) {
+
+        if (isLoading) {
+            return;
+        }
+
+        setIsLoading(true);
+
         auth.authorize(data)
             .then((res) => {
                 localStorage.setItem('jwt', res.jwt);
@@ -153,9 +170,19 @@ function App() {
                 setErrorStatusCodeLogin(err);
                 setIsSuccessfulLogin(false);
             })
+            .finally(() => {
+                setIsLoading(false);
+            });
     }
 
     function handleUpdateUserInfo(name, email) {
+
+        if (isLoading) {
+            return;
+        }
+
+        setIsLoading(true);
+
         api.updateProfileInfo(name, email)
             .then((data) => {
                 setCurrentUser(data);
@@ -166,68 +193,100 @@ function App() {
                 setErrorStatusCodeProfile(err);
                 setIsSuccessfulUpdateProfile(false);
             })
-    }
-
-function handleSearchMovies(query, stateCheckbox) {
-    if (isLoading) {
-        return
-    }
-    setIsLoading(true);
-
-    setQueryKeyWord(query);
-    setStatusChecbox(stateCheckbox);
-
-    localStorage.setItem('query', query);
-    localStorage.setItem('stateCheckbox', stateCheckbox);
-}
-
-React.useEffect(() => {
-
-    let films = [];
-
-    if (localStorage.getItem('allmovies'))
-    {
-        films = JSON.parse(localStorage.getItem('allmovies'));
-    }
-
-    if (films.length === 0) {
-        apiMovies.getFoundMovies()
-            .then((movies) => {
-                localStorage.setItem('allmovies', JSON.stringify(movies));
-                setAllMovies(movies);
-                setIsLoading(false);
-            })
-            .catch(err => {
-                setIsError(true);
-                console.log(err);
-            })
             .finally(() => {
                 setIsLoading(false);
-            })
-    } else {
-        setAllMovies(films);
-        setIsLoading(false);
+            });
     }
 
-}, []);
+    function handleSearchMovies(query, stateCheckbox) {
 
-React.useEffect(() => {
-    if (allMovies.length !== 0) {
-        const filteredMovies = handleFoundMovies(queryKeyWord, allMovies);
-        const film = (statusChecbox === true) ? filterShortFilm(filteredMovies) : filteredMovies;
-        setFoundMovies(film);
-        checkFoundMoviesLength(film, setIsNothingFound);
-        setIsError(false);
-        setIsLoading(false);
-        localStorage.setItem('movies', JSON.stringify(film));
+        // останавливаем запрос, если не завершился предыдущий
+        if (isLoading) {
+            return;
+        }
+
+        setIsLoading(true);
+
+        setQueryKeyWord(query);
+        setStatusChecbox(stateCheckbox);
+
+        localStorage.setItem('query', query || "");
+        localStorage.setItem('stateCheckbox', stateCheckbox);
     }
-}, [queryKeyWord, allMovies, statusChecbox, isLoading]);
+
+    React.useEffect(() => {
+
+        let films = [];
+
+        if (localStorage.getItem('allmovies')) {
+            films = JSON.parse(localStorage.getItem('allmovies'));
+        }
+
+        if (films.length === 0) {
+            apiMovies.getFoundMovies()
+                .then((movies) => {
+                    localStorage.setItem('allmovies', JSON.stringify(movies));
+                    setAllMovies(movies);
+                    setIsLoading(false);
+                })
+                .catch(err => {
+                    setIsError(true);
+                    console.log(err);
+                })
+                .finally(() => {
+                    setIsLoading(false);
+                })
+        } else {
+            setAllMovies(films);
+            setIsLoading(false);
+        }
+
+    }, []);
+
+    React.useEffect(() => {
+
+        const query = localStorage.getItem('query') || "";
+        const stateCheckbox = localStorage.getItem('stateCheckbox');
+
+        if (query) {
+            setQueryKeyWord(query);
+        } else {
+            localStorage.setItem('query', '');
+            setQueryKeyWord('');
+        }
+
+        if (stateCheckbox) {
+            setStatusChecbox(stateCheckbox);
+        } else {
+            localStorage.setItem('stateCheckbox', false);
+            setStatusChecbox(false);
+        }
+
+    }, []);
+
+    React.useEffect(() => {
+
+        if (allMovies.length !== 0) {
+            const filteredMovies = handleFoundMovies(queryKeyWord, allMovies);
+            const film = (statusChecbox === true || statusChecbox === "true") ? filterShortFilm(filteredMovies) : filteredMovies;
+            setFoundMovies(film);
+            checkFoundMoviesLength(film, setIsNothingFound);
+            setIsError(false);
+            setIsLoading(false);
+            localStorage.setItem('movies', JSON.stringify(film));
+        }
+    }, [queryKeyWord, allMovies, statusChecbox, isLoading]);
 
     function handleSearchSavedMovies(query, stateCheckbox) {
+
+        if (isLoading) {
+            return;
+        }
+
         setIsLoading(true)
         setIsMovieSearch(true);
         const filteredMovies = handleFoundMovies(query, savedMovies);
-        const film = (stateCheckbox === true) ? filterShortFilm(filteredMovies) : filteredMovies;
+        const film = (stateCheckbox === true || stateCheckbox === "true") ? filterShortFilm(filteredMovies) : filteredMovies;
         setFoundMoviesInSavedMovies(film);
         checkFoundMoviesLength(film, setIsNothingFoundSavedMovies);
         setIsErrorSavedMovies(false);
@@ -243,6 +302,13 @@ React.useEffect(() => {
     }
 
     function handleAddMovieToSaved(newMovie) {
+
+        if (isLoading) {
+            return;
+        }
+
+        setIsLoading(true);
+
         api.addMovieToSaved(newMovie)
             .then((newMovie) => {
                 setSavedMovies([newMovie, ...savedMovies]);
@@ -252,9 +318,19 @@ React.useEffect(() => {
                 setIsError(true);
                 console.log(err);
             })
+            .finally(() => {
+                setIsLoading(false)
+            })
     }
 
     function handleDeleteSavedMovie(movie) {
+
+        if (isLoading) {
+            return;
+        }
+
+        setIsLoading(true);
+
         setIsDelete(true)
         api.deleteMovieLike(movie)
             .then((movie) => {
@@ -266,16 +342,41 @@ React.useEffect(() => {
             })
             .finally(() => {
                 setIsDelete(false)
+                setIsLoading(false)
             })
     }
 
     function logout() {
         setIsSuccessfulUpdateProfile(false);
         setLoggedIn(false);
+        // очищаем localStorage
         localStorage.clear();
+        // очищаем useState
         setFoundMovies([]);
         setSavedMovies([])
         setCurrentUser({});
+
+        //
+        setIsLoading(false);
+        setAllMovies([]);
+        setFoundMoviesInSavedMovies([]);
+        setIsMovieSearch(false);
+        setIsDelete(false);
+        setCurrentUser({ name: '', email: '' });
+        setIsError(false);
+        setIsNothingFound(false);
+        setIsErrorSavedMovies(false);
+        setIsNothingFoundSavedMovies(false);
+        setErrorStatusCodeRegistration(false);
+        setIsSuccessfulRegistration(false);
+        setErrorStatusCodeLogin('');
+        setIsSuccessfulLogin(false);
+        setErrorStatusCodeProfile('');
+        setIsSuccessfulUpdateProfile(false);
+        setQueryKeyWord('');
+        setStatusChecbox(checboxState);
+        //
+
         history.push('/');
     }
 
@@ -283,80 +384,86 @@ React.useEffect(() => {
         <div className="page">
             <CurrentUserContext.Provider value={currentUser}>
 
-                    <Header loggedIn={loggedIn}/>
-                    <Switch>
+                <Header loggedIn={loggedIn} />
+                <Switch>
 
-                        <Route exact path="/">
-                            <Main/>
-                        </Route>
+                    <Route exact path="/">
+                        <Main />
+                    </Route>
 
-                        <Route path="/signup">
-                            {!loggedIn ? 
-                                <Register
-                                        handleRegistration={handleRegistration}
-                                        errorStatusCode={errorStatusCodeRegistration}
-                                        isSuccessfulRequest={isSuccessfulRegistration}
-                                    /> : <Redirect exact to="/movies"/>}
-                        </Route>
+                    <Route path="/signup">
+                        {!loggedIn ?
+                            <Register
+                                isLoading={isLoading}
+                                handleRegistration={handleRegistration}
+                                errorStatusCode={errorStatusCodeRegistration}
+                                isSuccessfulRequest={isSuccessfulRegistration}
+                            /> : <Redirect exact to="/movies" />}
+                    </Route>
 
-                        <Route path="/signin">
-                            {!loggedIn ? <Login
+                    <Route path="/signin">
+                        {!loggedIn ?
+                            <Login
+                                isLoading={isLoading}
                                 handleLogin={handleLogin}
                                 errorStatusCode={errorStatusCodeLogin}
                                 isSuccessfulRequest={isSuccessfulLogin}
-                            /> : <Redirect exact to="/movies"/>}
+                            /> : <Redirect exact to="/movies" />}
+                    </Route>
+
+                    {isUserChecked ?
+                        <ProtectedRoute path="/profile" loggedIn={loggedIn}>
+                            <Profile
+                                isLoading={isLoading}
+                                logout={logout}
+                                onUpdateUserInfo={handleUpdateUserInfo}
+                                errorStatusCode={errorStatusCodeProfile}
+                                isSuccessfulRequest={isSuccessfulUpdateProfile}
+                            />
+                        </ProtectedRoute>
+                        : null}
+
+                    {isUserChecked ?
+                        <ProtectedRoute path="/movies" loggedIn={loggedIn}>
+                            <Movies
+                                isLoading={isLoading}
+                                onFindMovies={handleSearchMovies}
+                                movies={foundMovies}
+                                onSaveMovie={handleAddMovieToSaved}
+                                onDeleteMovie={handleDeleteSavedMovie}
+                                savedMovies={savedMovies}
+                                isError={isError}
+                                isNothingFound={isNothingFound}
+                            />
+                        </ProtectedRoute>
+                        : null}
+
+                    {isUserChecked ?
+                        <ProtectedRoute path="/saved-movies" loggedIn={loggedIn}>
+                            <SavedMovies
+                                isLoading={isLoading}
+                                onFindMovies={handleSearchSavedMovies}
+                                movies={savedMovies}
+                                foundMoviesInSavedMovies={foundMoviesInSavedMovies}
+                                onMovieSearch={isMovieSearch}
+                                onDeleteMovie={handleDeleteSavedMovie}
+                                isError={isErrorSavedMovies}
+                                isNothingFound={isNothingFoundSavedMovies}
+                            />
+                        </ProtectedRoute>
+                        : null}
+
+                    {isUserChecked ?
+                        <Route path="*" exact={true}>
+                            <PageNotFound />
                         </Route>
+                        : null}
 
-                        {isUserChecked ?
-                            <ProtectedRoute path="/profile" loggedIn={loggedIn}>
-                                <Profile
-                                    logout={logout}
-                                    onUpdateUserInfo={handleUpdateUserInfo}
-                                    errorStatusCode={errorStatusCodeProfile}
-                                    isSuccessfulRequest={isSuccessfulUpdateProfile}
-                                />
-                            </ProtectedRoute>
-                            : null}
 
-                        {isUserChecked ?
-                            <ProtectedRoute path="/movies" loggedIn={loggedIn}>
-                                <Movies
-                                    isLoading={isLoading}
-                                    onFindMovies={handleSearchMovies}
-                                    movies={foundMovies}
-                                    onSaveMovie={handleAddMovieToSaved}
-                                    onDeleteMovie={handleDeleteSavedMovie}
-                                    savedMovies={savedMovies}
-                                    isError={isError}
-                                    isNothingFound={isNothingFound}
-                                />
-                            </ProtectedRoute>
-                            : null}
+                </Switch>
 
-                        {isUserChecked ?
-                            <ProtectedRoute path="/saved-movies" loggedIn={loggedIn}>
-                                <SavedMovies
-                                    isLoading={isLoading}
-                                    onFindMovies={handleSearchSavedMovies}
-                                    movies={savedMovies}
-                                    foundMoviesInSavedMovies={foundMoviesInSavedMovies}
-                                    onMovieSearch={isMovieSearch}
-                                    onDeleteMovie={handleDeleteSavedMovie}
-                                    isError={isErrorSavedMovies}
-                                    isNothingFound={isNothingFoundSavedMovies}
-                                />
-                            </ProtectedRoute>
-                            : null}
+                <Footer />
 
-                        
-                            <Route path="*" exact={true}>
-                                <PageNotFound/>
-                            </Route>
-                            
-                    </Switch>
-
-                    <Footer/>
-               
             </ CurrentUserContext.Provider>
 
         </div>

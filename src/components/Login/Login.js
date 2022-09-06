@@ -10,9 +10,15 @@ function Login(props) {
 
     function handleSubmit(e) {
         e.preventDefault();
+
+        if (props.isLoading) {
+            return;
+        }
+
         if (!values.email || !values.password) {
             return;
         }
+
         props.handleLogin({
             password: values.password,
             email: values.email,
@@ -38,6 +44,7 @@ function Login(props) {
                         minLength="3"
                         maxLength="40"
                         value={values.email || ''}
+                        disabled={props.isLoading}
                         onChange={handleChange}/>
                     
                     <span className="login__error form__error">{errors.email || ''}</span>
@@ -50,12 +57,14 @@ function Login(props) {
                         autoComplete="on" 
                         value={values.password || ''}
                         onChange={handleChange}
+                        disabled={props.isLoading}
                         required/>
                     <span className="login__error form__error">{errors.password || ''}</span>
 
                     <Error errorStatusCode={props.errorStatusCode} isSuccessfulRequest={props.isSuccessfulRequest}/>
                     <button type="submit" 
-                        className={`login__button block__button_m form__button style_hover ${!isValid ? "form__button_disabled" : ""}`} disabled={!isValid}>Войти</button>
+                        className={`login__button block__button_m form__button style_hover ${!isValid || props.isLoading ? "form__button_disabled" : ""}`} 
+                        disabled={!isValid || props.isLoading}>Войти</button>
                     <p className="login__text form__text">Ещё не зарегистрированы?
                         <Link to="signup" className="login__link-input form__link">Регистрация</Link>
                     </p>

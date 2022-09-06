@@ -51,6 +51,11 @@ function Profile(props) {
   }
 
   function handleSubmit(e) {
+
+    if (props.isLoading) {
+      return;
+    }
+
     e.preventDefault();
 
     props.onUpdateUserInfo(values.name, values.email);
@@ -62,7 +67,6 @@ function Profile(props) {
   }
 
   function handleChangeUpdateUser(e) {
-
     handleChange(e);
   }
 
@@ -86,7 +90,7 @@ function Profile(props) {
               maxLength="40"
               value={values.name || ""}
               onChange={handleChangeUpdateUser}
-              disabled={!isInputActive}
+              disabled={!isInputActive || props.isLoading}
             />
           </div>
           <span id="name-input-error" className="profile__error">
@@ -106,7 +110,7 @@ function Profile(props) {
               pattern="^[a-zA-Z][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$"
               value={values.email || ""}
               onChange={handleChangeUpdateUser}
-              disabled={!isInputActive}
+              disabled={!isInputActive || props.isLoading}
             />
           </div>
           <span id="email-input-error" className="profile__error">
@@ -136,10 +140,10 @@ function Profile(props) {
             </>
           ) : (
             <div className="profile__link-container">
-                <Error errorStatusCode={props.isSuccessfulRequest} isSuccessfulRequest={props.isSuccessfulRequest}/>
+              <Error errorStatusCode={props.isSuccessfulRequest} isSuccessfulRequest={props.isSuccessfulRequest} />
               <button
-                className={`profile__button style_hover ${!isValid ? 'profile__button_disabled' : ''}`}
-                disabled={!isValid}
+                className={`profile__button style_hover ${!isValid || props.isLoading ? 'profile__button_disabled' : ''}`}
+                disabled={!isValid || props.isLoading}
                 type="submit">
                 Сохранить
               </button>

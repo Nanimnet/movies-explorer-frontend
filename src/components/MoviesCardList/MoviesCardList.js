@@ -21,19 +21,6 @@ function MoviesCardList(props) {
         handleShowCards()
     }, [size, numberOfCards, showMoreCards]);
 
-    // React.useEffect(() => {
-    //     if (size >= 1150) {
-    //         setNumberOfCards(12);
-    //         setShowMoreCards(3);
-    //     } else if (size > 480 && size < 1150) {
-    //         setNumberOfCards(8);
-    //         setShowMoreCards(2);
-    //     } else if (size > 318 && size <= 480) {
-    //         setNumberOfCards(5);
-    //         setShowMoreCards(2);
-    //     }
-    // }, [size, props.movies]);
-
     React.useEffect(() => {
         if (size >= DEVICE_PARAMS.desktop.width) {
             setNumberOfCards(DEVICE_PARAMS.desktop.cards.total);
@@ -104,32 +91,34 @@ function MoviesCardList(props) {
         )
     }
 
-  return (
-    <section className="movies">
-      {(props.isError || props.isNothingFound) ? (
-        props.isError ? (
-        <span className="movies__error-message">Во время запроса произошла ошибка.
-        Скорее всего, сервер недоступен.
-        Подождите немного и попробуйте ещё раз</span>) : (
-          <span className="movies__error-message">Ничего не найдено</span>)
-        ) : ( 
-          <div className="movies__container block">
-            <div className="movies__cards">
-            {locationMovies ? getFoundMoviesList() : getSavedMovies()}
-              </div>
+    return (
+        <section className="movies">
+            {(props.isError || props.isNothingFound)
+                ? (props.isError
+                    ? (<span className="movies__error-message">Во время запроса произошла ошибка.
+                        Скорее всего, сервер недоступен.
+                        Подождите немного и попробуйте ещё раз</span>)
+                    : ((localStorage.getItem('query') || '') === '')
+                        ? (null)
+                        : (<span className="movies__error-message">Ничего не найдено</span>)
+                )
+                : (<div className="movies__container block">
+                    <div className="movies__cards">
+                        {locationMovies ? getFoundMoviesList() : getSavedMovies()}
+                    </div>
 
-              {locationMovies ? (
-                <ShowMoreButton
-                  isNothingFound={props.isNothingFound}
-                  movies={props.movies}
-                  onShowMore={handleButtonClickShowMore}
-                  moviesToRender={moviesToRender}
-                  />
-              ) : ''}
-          </div>
-        )}
-    </section>
-  )
+                    {locationMovies ? (
+                        <ShowMoreButton
+                            isNothingFound={props.isNothingFound}
+                            movies={props.movies}
+                            onShowMore={handleButtonClickShowMore}
+                            moviesToRender={moviesToRender}
+                        />
+                    ) : ''}
+                </div>
+                )}
+        </section>
+    )
 }
 
 export default MoviesCardList;
