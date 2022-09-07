@@ -98,9 +98,7 @@ function Error(props) {
     }
 
     return (
-        <>
             <span className="error">{props.isSuccessfulRequest ? '' : errorMessage}</span>
-        </>
     )
 }
 

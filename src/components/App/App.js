@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { Switch, Route, useHistory, useLocation, Redirect } from 'react-router-dom';
 import Header from '../Header/Header';
 import Main from '../Main/Main';
@@ -16,7 +16,6 @@ import api from '../../utils/Api';
 import { handleFoundMovies, filterShortFilm } from '../../utils/utils';
 import * as auth from '../../utils/auth';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
-import Preloader from '../Preloader/Preloader'
 
 function App() {
     const history = useHistory();
@@ -241,7 +240,7 @@ function App() {
             setIsLoading(false);
         }
 
-    }, []);
+    }, [loggedIn]);
 
     React.useEffect(() => {
 
@@ -303,12 +302,6 @@ function App() {
 
     function handleAddMovieToSaved(newMovie) {
 
-        if (isLoading) {
-            return;
-        }
-
-        setIsLoading(true);
-
         api.addMovieToSaved(newMovie)
             .then((newMovie) => {
                 setSavedMovies([newMovie, ...savedMovies]);
@@ -318,18 +311,9 @@ function App() {
                 setIsError(true);
                 console.log(err);
             })
-            .finally(() => {
-                setIsLoading(false)
-            })
     }
 
     function handleDeleteSavedMovie(movie) {
-
-        if (isLoading) {
-            return;
-        }
-
-        setIsLoading(true);
 
         setIsDelete(true)
         api.deleteMovieLike(movie)
@@ -342,7 +326,6 @@ function App() {
             })
             .finally(() => {
                 setIsDelete(false)
-                setIsLoading(false)
             })
     }
 

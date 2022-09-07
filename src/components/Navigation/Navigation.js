@@ -58,7 +58,6 @@ function Navigation({ loggedIn }) {
          
         </nav>
       ) : (
-        <>
           <nav className="navigation navigation_login">
             <Link className="navigation__link" to="/signup">
               Регистрация
@@ -70,7 +69,6 @@ function Navigation({ loggedIn }) {
               Войти
             </Link>
           </nav>
-        </>
       )}
     </>
   );

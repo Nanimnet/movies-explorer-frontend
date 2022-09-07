@@ -15,9 +15,7 @@ function SearchForm(props) {
     React.useEffect(() => {
         if (localStorage.getItem('query')
             && localStorage.getItem('stateCheckbox')
-            && (locationMovies
-                //|| location.pathname === '/saved-movies' // нужно ли автозаполнение формы на странице сохраненных фильмов? Потому что query - глобальная переменная и действует на глобальный фильтр
-            )
+            && (locationMovies)
         ) {
             const inputSearch = localStorage.getItem('query')
             const checkbox = JSON.parse(localStorage.getItem('stateCheckbox'));
@@ -30,8 +28,6 @@ function SearchForm(props) {
     function handleCheckBox(e) {
 
         setCheckBox(!checkbox);
-        //handleChange(e);
-        //handleSubmit(e);
         handleSubmitCheckBox();
     }
 
@@ -93,7 +89,7 @@ function SearchForm(props) {
                             name="checkbox"
                             className="search__checkbox-input"
                             type="checkbox"
-                            disabled={(/*!isValid ||*/ props.isLoading)}
+                            disabled={(props.isLoading)}
                             value={values.checkbox}
                             onChange={handleCheckBox}
                             checked={checkbox}
