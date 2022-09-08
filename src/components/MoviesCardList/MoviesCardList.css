@@ -47,3 +47,17 @@
     padding: 0 30px;
   }
 }
+
+.movies__error-message {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  min-height: 490px;
+  height: 100%;
+  width: 70%;
+  margin: auto;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 28px;
+  color: #EE3465;
+}

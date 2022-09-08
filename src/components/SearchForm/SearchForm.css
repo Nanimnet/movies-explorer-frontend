@@ -109,6 +109,20 @@
   background-color: #fafafa;
 }
 
+.search__button[disabled] {
+  filter: grayscale(1);
+  opacity: 0.5!important;/*перекрывает hover*/
+  background-image: url(../../images/find.svg);
+  background-repeat: no-repeat;
+  border: 0;
+  height: 34px;
+  padding: 0;
+  width: 34px;
+  background-size: 100%;
+  background-position: center;
+  background-color: #fafafa;
+}
+
 .search__checkbox-slider {
   background-color: #2be080;
   border-radius: 20px;
@@ -132,6 +146,32 @@
   width: 10px;
   background-color: #fff;
 }
+
+.search__checkbox-slider_checked {
+  background-color: #EBEBEB;
+  border-radius: 20px;
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: 0.4s;
+}
+
+.search__checkbox-slider_checked:before {
+  border-radius: 50%;
+  bottom: 2px;
+  content: "";
+  height: 10px;
+  left: 22px;
+  position: absolute;
+  transition: 0.4s;
+  width: 10px;
+  background-color: #F5F5F5;
+}
+
+
 
 .search__checkbox {
   background-color: #fafafa;
@@ -179,4 +219,18 @@
 
 .search__box_active {
   border-bottom: 1px solid #3456F3;
+}
+
+.search__error {
+  font-weight: 400;
+    font-size: 13px;
+    line-height: 1.38;
+    color: #EE3465;
+    margin-left: 40px;
+    display: none;
+    text-align: center;
+}
+
+.search__error_active {
+  display: block;
 }

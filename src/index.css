@@ -6,4 +6,5 @@
   margin: 0 auto;
   min-width: 320px;
   background-color: #FAFAFA;
+  min-height: 100vh;
 }
